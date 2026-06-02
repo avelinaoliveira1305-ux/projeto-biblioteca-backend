@@ -1,22 +1,28 @@
-from django.http import JsonResponse
+from rest_framework.response import Response  # Mudamos para o Response oficial do REST
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
-
+# Sua lista de livros simulada da Unidade 1
 livros_db = [
     {"id_livro": 1, "titulo": "CÓDIGO LIMPO", "ano_publicacao": 2008, "id_autor": 1},
     {"id_livro": 2, "titulo": "ARQUITETURA LIMPA", "ano_publicacao": 2017, "id_autor": 1},
-    {"id_livro": 3, "titulo": "ENTENDENDO ALGORITMOS", "ano_publicacao": 2017, "id_autor": 2},
+    {"id_livro": 3, "titulo": "ENTENDENDO ALGORITMOS", "ano_publicacao": 2017, "id_autor": 2}
 ]
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
 def lista_livros(request):
-    return JsonResponse(livros_db, safe=False)
+    # Mudamos de JsonResponse para Response
+    return Response(livros_db)
 
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
 def busca_livro_por_id(request, id):
-    # Procura o livro específico na lista
     livro = next((item for item in livros_db if item["id_livro"] == id), None)
     
     if livro:
-        return JsonResponse(livro)
+        # Mudamos de JsonResponse para Response
+        return Response(livro)
     else:
-        return JsonResponse({"erro": "Livro não encontrado"}, status=404)
+        # Mudamos de JsonResponse para Response
+        return Response({"erro": "Livro não encontrado"}, status=404)
